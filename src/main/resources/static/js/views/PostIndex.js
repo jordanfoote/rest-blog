@@ -5,7 +5,12 @@ export default function PostIndex(props) {
         </header>
         <main>
             <div id="posts-container">
-                ${props.posts.map(post => `<h3>${post.title}</h3>`).join('')}   
+                ${props.posts.map(post => 
+                    `
+                        <h3>${post.title}</h3>
+                        <p>${post.content}</p>
+                    `)
+                    .join('')}   
             </div>
         </main>
     `;

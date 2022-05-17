@@ -1,13 +1,11 @@
 package com.example.restblog.web;
 
 import com.example.restblog.data.Post;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/api/posts", headers = "Accept=application/json")
@@ -23,6 +21,26 @@ public class PostsController {
 
     @GetMapping("{id}")
     public Post getById(@PathVariable Long id) {
-        return new Post(id, "First Post", "This is my very first post!");
+        for (Post post : getAll()) {
+            if (Objects.equals(post.getId(), id)) {
+                return post;
+            }
+        }
+        return new Post();
+    }
+
+    @PostMapping
+    private void createPost(@RequestBody Post post) {
+        System.out.println(post);
+    }
+
+    @PutMapping("{id}")
+    private void updatePost(@RequestBody Post post, @PathVariable Long id) {
+
+    }
+
+    @DeleteMapping("{id}")
+    private void deletePost(@PathVariable Long id) {
+
     }
 }
