@@ -36,11 +36,11 @@ public class PostsController {
 
     @PutMapping("{id}")
     private void updatePost(@RequestBody Post post, @PathVariable Long id) {
-
+        System.out.println(post);
     }
 
     @DeleteMapping("{id}")
     private void deletePost(@PathVariable Long id) {
-
+        System.out.println("Deleting: " + id);
     }
 }
