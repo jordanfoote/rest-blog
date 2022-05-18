@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@CrossOrigin
 @RestController
 @RequestMapping(value = "/api/posts", headers = "Accept=application/json")
 public class PostsController {
