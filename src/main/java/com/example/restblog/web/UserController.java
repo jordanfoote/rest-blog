@@ -3,6 +3,8 @@ package com.example.restblog.web;
 import com.example.restblog.data.User;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,16 +57,23 @@ public class UserController {
         users.add(newUser);
     }
 
-    @PutMapping("{id}")
-    private void updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        for (User user : users) {
-            if (user.getId().equals(id)) {
-                user.setUsername(updatedUser.getUsername());
-                user.setEmail(updatedUser.getEmail());
-                user.setPassword(updatedUser.getPassword());
-            }
-        }
+    @PutMapping("{id}/updatePassword")
+    private void updatePassword(@PathVariable Long id, @RequestParam(required = false) String oldPassword, @Valid @Size(min= 3) @RequestParam String newPassword) {
+        User userToUpdate = getById(id);
+        userToUpdate.setPassword(newPassword);
+        System.out.println(userToUpdate.getPassword());
     }
+
+    // @PutMapping("{id}")
+    // private void updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    //     for (User user : users) {
+    //         if (user.getId().equals(id)) {
+    //             user.setUsername(updatedUser.getUsername());
+    //             user.setEmail(updatedUser.getEmail());
+    //             user.setPassword(updatedUser.getPassword());
+    //         }
+    //     }
+    // }
 
     @DeleteMapping("{id}")
     private void deleteUser(@PathVariable Long id) {
