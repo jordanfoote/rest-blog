@@ -29,6 +29,26 @@ public class UserController {
         return null;
     }
 
+    @GetMapping("username")
+    public User getByUsername(@RequestParam String username) {
+        for (User user : getAll()) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    @GetMapping("email")
+    public User getByEmail(@RequestParam String email) {
+        for (User user : getAll()) {
+            if (user.getEmail().equals(email)) {
+                return user;
+            }
+        }
+        return null;
+    }
+
     @PostMapping
     public void createUser(@RequestBody User newUser) {
         System.out.println(newUser);
