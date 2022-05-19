@@ -12,11 +12,10 @@ import java.util.Objects;
 @RequestMapping(value = "/api/posts", headers = "Accept=application/json")
 public class PostsController {
 
+    List<Post> posts = setPostList();
+
     @GetMapping
     public List<Post> getAll() {
-        List<Post> posts = new ArrayList<>();
-        posts.add(new Post(1L, "First Post", "This is my very first post!"));
-        posts.add(new Post(2L, "Another Post", "This is another post."));
         return posts;
     }
 
@@ -36,12 +35,24 @@ public class PostsController {
     }
 
     @PutMapping("{id}")
-    private void updatePost(@RequestBody Post post, @PathVariable Long id) {
-        System.out.println(post);
+    private void updatePost(@RequestBody Post updatedPost, @PathVariable Long id) {
+        for (Post post : posts) {
+            if (post.getId().equals(id)) {
+                post.setContent(updatedPost.getContent());
+                post.setTitle(updatedPost.getTitle());
+            }
+        }
     }
 
     @DeleteMapping("{id}")
     private void deletePost(@PathVariable Long id) {
         System.out.println("Deleting: " + id);
+    }
+
+    private List<Post> setPostList() {
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post(1L, "First Post", "This is my very first post!"));
+        posts.add(new Post(2L, "Another Post", "This is another post."));
+        return posts;
     }
 }
