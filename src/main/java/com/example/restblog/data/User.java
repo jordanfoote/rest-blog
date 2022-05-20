@@ -2,6 +2,7 @@ package com.example.restblog.data;
 
 import javax.management.relation.Role;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class User {
 
@@ -11,6 +12,8 @@ public class User {
     private String password;
     private LocalDateTime createdAt = LocalDateTime.now();
     private Role role = Role.USER;
+
+    private List<Post> posts;
 
     public enum Role {USER, ADMIN};
 
@@ -77,6 +80,10 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
     }
 
     @Override
