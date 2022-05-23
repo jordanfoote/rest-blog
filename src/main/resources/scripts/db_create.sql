@@ -2,7 +2,7 @@ DROP DATABASE if exists blog_db;
 
 CREATE DATABASE if not exists blog_db;
 
-# CREATE USER casey_blog@localhost IDENTIFIED BY 'codeup12';
+CREATE USER 'blog_user'@'localhost' IDENTIFIED BY 'p@$$w0rd';
 
 GRANT ALL ON blog_db.* TO casey_blog@localhost;
 

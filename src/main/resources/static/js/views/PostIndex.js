@@ -85,13 +85,25 @@ function createEditPostListener() {
     $(document).on('click', '.edit-button', function (e) {
         e.preventDefault();
         postId = $(this).data("id");
-        requestMethod = "PUT";
 
         const postTitle = $(`#title-${postId}`).text();
         const postContent = $(`#content-${postId}`).text();
 
-        $("#add-post-title").val(postTitle);
-        $("#add-post-content").val(postContent);
+        const request = {
+            method: "PUT",
+            body: JSON.stringify({
+                id: postId,
+                title: postTitle,
+                postContent: postContent
+            })
+        };
+
+        fetch(`${BASE_URL}/${postId}`, request)
+            .then(res => {
+                // TODO: no need to reload the page if successful
+                return res.json();
+            })
+            .catch(err => console.log(err));
     })
 }
 
@@ -103,17 +115,16 @@ function createDeletePostListener() {
 
         const request = {
             method: "DELETE"
-        }
+        };
 
         fetch(`${BASE_URL}/${id}`, request)
             .then(res => {
                 console.log(res.status);
-                // createView("/posts")
-            }).catch(error => {
-            console.log(error);
-            // createView("/posts");
-        }).finally(() => {
-            createView("/posts")
-        })
+                // TODO: once we get a successful response, remove the post element from the DOM
+                $(`#post-${id}`).remove();
+            })
+            .catch(error => {
+                console.log(error);
+            });
     })
 }
