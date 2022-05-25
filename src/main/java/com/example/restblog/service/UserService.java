@@ -1,7 +1,7 @@
 package com.example.restblog.service;
 
-import com.example.restblog.data.Post;
-import com.example.restblog.data.User;
+
+import com.example.restblog.data.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,63 +10,65 @@ import java.util.List;
 @Service
 public class UserService {
 
-    private List<User> userList = setUserList();
-    private List<Post> posts = setPostList();
+    private final UserRepository userRepository;
+    private final PostRepository postRepository;
+    private final CategoriesRepository categoriesRepository;
+
+    public UserService(UserRepository userRepository, PostRepository postRepository, CategoriesRepository categoriesRepository) {
+        this.userRepository = userRepository;
+        this.postRepository = postRepository;
+        this.categoriesRepository = categoriesRepository;
+    }
 
     public List<User> getUsersList() {
-        return userList;
+        return userRepository.findAll();
     }
 
     public List<Post> getPostList() {
-        return posts;
+        return postRepository.findAll();
     }
 
     public void addPost(Post newPost, String username) {
         User user = getUserByUsername(username);
         user.getPosts().add(newPost);
         newPost.setUser(user);
-        posts.add(newPost);
+
+        List<Category> categoriesToAdd = new ArrayList<>();
+
+        for (Category category : newPost.getCategories()) {
+            categoriesToAdd.add(categoriesRepository.findCategoryByName(category.getName()));
+        }
+
+        newPost.setCategories(categoriesToAdd);
+
+        postRepository.save(newPost);
     }
 
-    public User getUserById(Long id){
-        for (User user : userList){
-            if (user.getId().equals(id)){
-                return user;
-            }
-        }
-        return null;
+    public User getUserById(Long id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
     public User getUserByUsername(String username) {
-        for (User user : userList) {
-            if (user.getUsername().equals(username)) {
-                return user;
-            }
+        return userRepository.findByUsername(username);
+    }
+
+    public void updatePost(long postId, Post post) {
+        Post postToUpdate = postRepository.findById(postId).orElseThrow();
+
+        if (post.getContent() != null && !post.getContent().isEmpty()) {
+            postToUpdate.setContent(post.getContent());
         }
-        return null;
+        if (post.getTitle() != null && !post.getTitle().isEmpty()) {
+            postToUpdate.setTitle(post.getTitle());
+        }
+        postRepository.save(postToUpdate);
     }
 
     public void deletePostById(long id) {
-        for(Post post : posts) {
-            if (post.getId() == id) {
-                posts.remove(post);
-                return;
-            }
-        }
+        postRepository.deleteById(id);
     }
 
-    private List<User> setUserList(){
-        List<User> userList = new ArrayList<>();
-        userList.add(new User(1L, "Jordan Foote", "jordan.foote@outlook.com", "12345"));
-        userList.add(new User(2L, "Mr. Sirguy", "dudebro@gmail.com", "54321"));
-        return userList;
-    }
-
-    private List<Post> setPostList() {
-        List<Post> postList = new ArrayList<>();
-        postList.add(new Post(1L, "First Post", "This is my very first post!", userList.get(0)));
-        postList.add(new Post(2L, "Another Post", "This is another post.", userList.get(1)));
-        postList.add(new Post(3L, "Posty", "posts happening here", userList.get(0)));
-        return postList;
+    public List<Post> getPostsByTitleKeyword(String keyword) {
+        return postRepository.searchByTitleLike(keyword);
     }
 }

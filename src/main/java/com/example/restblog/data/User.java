@@ -2,14 +2,13 @@ package com.example.restblog.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.management.relation.Role;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "users")
+@Table(name="users")
 public class User {
 
     @Id
@@ -18,6 +17,7 @@ public class User {
     private String username;
     private String email;
     private String password;
+
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Enumerated(EnumType.STRING)
@@ -29,13 +29,13 @@ public class User {
 
     public enum Role {USER, ADMIN};
 
-    public User (String username, String email, String password) {
+    public User(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
     }
 
-    public User (Long id, String username, String email, String password) {
+    public User(Long id, String username, String email, String password) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -43,7 +43,6 @@ public class User {
     }
 
     public User() {
-
     }
 
     public Long getId() {

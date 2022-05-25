@@ -15,7 +15,7 @@ public class PostsController {
 
     private final UserService userService;
 
-    public PostsController(UserService userService) {
+    public PostsController(UserService userService){
         this.userService = userService;
     }
 
@@ -35,27 +35,27 @@ public class PostsController {
     }
 
     @PostMapping
-    private void createPost(@RequestBody Post postToAdd) {
+    public void createPost(@RequestBody Post postToAdd) {
         System.out.println(postToAdd);
     }
 
-    @PostMapping("username")
-    public void createByUsername(@PathVariable String username, @RequestBody Post newPost) {
+    @PostMapping("{username}")
+    public void createByUsername(@PathVariable String username, @RequestBody Post newPost){
         userService.addPost(newPost, username);
     }
 
     @PutMapping("{id}")
-    private void updatePost(@RequestBody Post updatedPost, @PathVariable Long id) {
-        for (Post post : userService.getPostList()) {
-            if (post.getId().equals(id)) {
-                post.setContent(updatedPost.getContent());
-                post.setTitle(updatedPost.getTitle());
-            }
-        }
+    public void updatePost(@PathVariable Long id, @RequestBody Post updatedPost) {
+        userService.updatePost(id, updatedPost);
     }
 
     @DeleteMapping("{id}")
-    private void deletePost(@PathVariable Long id) {
+    public void deletePost(@PathVariable Long id) {
         userService.deletePostById(id);
+    }
+
+    @GetMapping("search")
+    public List<Post> searchPosts(@RequestParam String keyword) {
+        return userService.getPostsByTitleKeyword(keyword);
     }
 }

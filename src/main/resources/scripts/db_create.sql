@@ -2,10 +2,6 @@ DROP DATABASE if exists blog_db;
 
 CREATE DATABASE if not exists blog_db;
 
-CREATE USER 'blog_user'@'localhost' IDENTIFIED BY 'p@$$w0rd';
-
-GRANT ALL ON blog_db.* TO casey_blog@localhost;
-
 USE blog_db;
 
 
@@ -16,8 +12,8 @@ CREATE TABLE users
     password VARCHAR(60)  NOT NULL,
     email    VARCHAR(200) NOT NULL,
     role     VARCHAR(32)  NOT NULL,
+    created_at DATETIME NOT NULL,
     PRIMARY KEY (id)
-
 );
 
 CREATE TABLE posts
@@ -30,19 +26,19 @@ CREATE TABLE posts
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
-CREATE TABLE tags
+CREATE TABLE categories
 (
     id   INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100),
     PRIMARY KEY (id)
 );
 
-CREATE TABLE post_tags
+CREATE TABLE post_category
 (
     id      BIGINT NOT NULL AUTO_INCREMENT,
     post_id BIGINT NOT NULL,
-    tag_id  INT    NOT NULL,
+    category_id  INT    NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (post_id) REFERENCES posts (id),
-    FOREIGN KEY (tag_id) REFERENCES tags (id)
+    FOREIGN KEY (category_id) REFERENCES categories (id)
 );
